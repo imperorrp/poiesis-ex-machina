@@ -1,23 +1,43 @@
-# Spotify clone with View Transitions from Astro 3.0 [![Built with Astro](https://astro.badg.es/v2/built-with-astro/tiny.svg)](https://astro.build)
+# Poiesis Ex Machina (Poetry From The Machine)
+[![Built with Astro](https://astro.badg.es/v2/built-with-astro/tiny.svg)](https://astro.build)
 
-Clone of Spotify with [Astro View Transitions](https://docs.astro.build/en/guides/view-transitions/) is an **experimental feature** for fluid navigation, this example use tailwindcss and svelte.
+An LLM wrapper concept piece that generates poems + related imagery based on user-picked archetypes and user-entered prompts. 
 
-## Deploy
-You can Deploy the example using [Vercel Template](https://vercel.com/templates/astro/view-transitions) or see a [live demo](https://spotify-astro-transitions.vercel.app/)
+Poiesis Ex Machina is a creative exploration of the potential and symbolism of generative ai models from a social/philosophical perspective. 
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?](https://vercel.com/new/clone?demo-description=Spotify%20clone%20built%20with%20Astro%20View%20Transitions%20integration%20for%20fluid%20navigation%20%2B%20TailwindCSS%20%2B%20Svelte.%0A&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F59uwliGeS8XoE5nHRBEsfI%2F2232d50cdddae956828ddb501ff2d993%2FCleanShot_2023-09-05_at_16.13.01_2x.png&demo-title=Spotify%20Clone%20with%20Astro%20View%20Transitions&demo-url=https%3A%2F%2Fspotify-astro-transitions.vercel.app%2F&from=templates&project-name=Spotify%20Clone%20with%20Astro%20View%20Transitions&repository-name=view-transitions&repository-url=https%3A%2F%2Fgithub.com%2Figorm84%2Fspotify-astro-transitions&skippable-integrations=1))
+## Live Project 
 
-#### Video
-https://github.com/igorm84/spotify-astro-transitions/assets/16727448/1e34f079-1f17-4ff1-9285-1dc406f0c631
+[Poiesis Ex Machina](https://poeies-ex-machina.vercel.app/)
 
-### About
+## About 
 
-View Transition is a **experimental** mechanism to transition between DOM states, learn more in these links:
+1. LLMs can be interpreted as techno-manifestations of (the Jungian concept of) the collective unconscious of humanity.
 
-- Astro Documentation: https://docs.astro.build/en/guides/view-transitions/
-- MDN Documentation: https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API
+2. Running LLMs on chips of silicon is like bringing them to life and consciousness- briefly.
 
-### Known issues
-#### Firefox and iOS Browsers
-Unfornatelly those browsers aren't compatible yet, see
-https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API#browser_compatibility
+3. A face of the LLM Shoggoth must be picked before it is prompted.
+
+<br>
+
+AI models are trained on countless human-produced data- essentially 
+forming a reflection of humankind's collective unconscious, frozen and distilled in the form of its weights, whatever neural net architectures represent them. The sum
+total of the human produced data fed into them, abstracted down to numbers. A digital collective human unconscious. 
+
+When prompted and an inference runs on them made, a series of matrix multiplications is set into motion. Computation occurs and electricity moves across tiny, intricately designed chips-
+small but effective, some of the most complex machinery forgeed by humanity. 
+
+The flipping of transistors happens en masse- something unremarkable on the individual level, but on the whole creating something bigger than the sum of its parts. The neural net of the 
+model being run is brought to life- a microcosm of the metaphorical human spirit rendered real. 
+
+And finally, an output is produced. Different every time if rerun with the same prompt, what with inference runs being stochastic, but still striking. 
+
+Poetry and art are not new concepts- these human endeavours have been pursued since the beginning of recorded history. The emotions and feelings that poetry and art invoke are vast and myriad- 
+but there _are_ common themes and patterns to them, as any sociologian/historian can confirm. And what are our brains, and the neural circuitry-inspired artificial intelligences we've made, 
+if not pattern learning- and replication machines? 
+
+## Tech Stack
+
+Poiesis Ex Machina is built with the Astro framework and a few serverless javascript functions (`/api/index.js`) and deployed on Vercel. React and Svelte components are used in Astro "islands",
+and the [Spotify Clone with Astro View Transitions](https://github.com/igorm84/spotify-astro-transitions) site was used as a template. Shadcn/ui components are used as well. 
+
+
