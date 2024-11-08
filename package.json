@@ -1,0 +1,52 @@
+{
+  "name": "poiesis-ex-machina",
+  "description": "Poiesis Ex Machina - AI Poetry Generator",
+  "type": "module",
+  "version": "1.0.0",
+  "author": "https://github.com/imperorrp",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/react": "^3.6.1",
+    "@astrojs/svelte": "^4.0.0",
+    "@astrojs/tailwind": "^5.0.0",
+    "@nanostores/react": "^0.7.3",
+    "@radix-ui/react-accordion": "^1.2.0",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-separator": "^1.1.0",
+    "@radix-ui/react-switch": "^1.1.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "astro": "^3.0.7",
+    "astro-icon": "^0.8.1",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "cohere-ai": "^7.7.5",
+    "framer-motion": "^11.3.22",
+    "lucide-react": "^0.424.0",
+    "mongoose": "^8.5.3",
+    "nanostores": "^0.9.5",
+    "next-themes": "^0.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "replicate": "^0.27.1",
+    "solid-js": "^1.8.15",
+    "sonner": "^1.5.0",
+    "svelte": "^4.2.10",
+    "tailwind-merge": "^2.4.0",
+    "tailwindcss": "^3.0.24",
+    "tailwindcss-animate": "^1.0.7",
+    "together-ai": "^0.6.0-alpha.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.9",
+    "prettier": "^3.0.3",
+    "prettier-plugin-astro": "^0.12.0",
+    "prettier-plugin-tailwindcss": "^0.5.4"
+  }
+}

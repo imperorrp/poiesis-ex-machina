@@ -1,0 +1,88 @@
+---
+import GreetingTitle from "../components/GreetingTitle.svelte";
+import PageHeader from "../components/PageHeader.astro";
+import PageFooter from "../components/PageFooter.astro";
+import { PromptPicker } from "../components/PromptPicker.tsx"
+import SideItemCard from "../components/Side/SideItemCard.astro";
+import { Toaster } from "../components/ui/sonner.tsx"
+import { IndexAccordion } from "../components/IndexAccordion.tsx";
+import Layout from "../layouts/Layout.astro";
+import { sidebarPlaylists} from "../lib/data";
+
+const title="Home";
+const contextColor = "#134e4a";
+---
+
+<Layout title="Home">
+  <div
+    id="playlist-container"
+    class="relative transition-all duration-200 bg-context flex flex-col min-h-[95vh] flex-grow"
+    style="--context-color:#134e4a;"
+    data-color={contextColor}
+  >
+    <PageHeader />
+    <div class="relative z-10 px-6 flex flex-col flex-grow items-center">
+      <GreetingTitle client:visible />
+      <p class="ascii-font-lg p-2 py-6 text-center" data-color={contextColor}>Poetry from the Machine</p>
+
+      <div class="flex flex-col flex-grow items-center justify-evenly w-full">
+        <p class="p-2 pb-6 ascii-font text-base text-center w-3/4 text-center ">
+          Verse from the digital collective unconscious<sup class="text-lg cool-font-color"> 1 </sup> - summoned with silicon runes<sup class="text-lg cool-font-color"> 2 </sup> 
+        </p>
+        <PromptPicker client:load/>
+        <Toaster client:load/>
+        <IndexAccordion client:load/>
+        <a
+          class="lg:hidden xl:hidden flex gap-4 text-zinc-400 hover:text-zinc-100 py-3.5 px-5 font-semibold transition-all duration-300"
+        >
+          Archetypes
+        </a>
+        <div
+          class="grid gap-y-4 gap-x-6 sm:grid-cols-2 lg:hidden xl:hidden mt-6"
+        >
+          {sidebarPlaylists.map((playlist) => <SideItemCard {playlist} {title}/>)}
+        </div>
+      </div>
+    </div>
+    <div
+      class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/80"
+    >
+    </div>
+    
+    <PageFooter/>
+  </div>
+</Layout>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+  .cool-font {
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .cool-font-color {
+    color: #00bcd4;
+  }
+
+  #playlist-container {
+    box-sizing: border-box;
+  }
+</style>
+
+<script>
+
+  console.log(`In Index.astro`);
+
+  document.addEventListener("astro:before-swap", (e) => {
+    const styles = [
+      ...document.querySelectorAll<HTMLStyleElement>("head > style"),
+    ].filter((s) =>
+      s.innerText.startsWith(
+        ':where(html[dir="ltr"]),:where([data-sonner-toaster]'
+      )
+    );
+    if (styles.length > 0) {
+      e.newDocument.head.insertAdjacentElement("beforeend", styles[0]);
+    }
+  });
+
+</script>

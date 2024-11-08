@@ -1,0 +1,22 @@
+---
+
+
+type Props = {
+  href?: string;
+  title: string;
+};
+
+const { title, href} = Astro.props;
+const isTitleMatch = title === "Home";
+const contextColor = "#134e4a";
+---
+
+<li>
+  <a
+    {href}
+    class={`sidemenu-item shoggoth-font-mini cool-font-color flex gap-4 text-zinc-400 hover:text-zinc-100 py-3.5 px-5 font-semibold transition-all duration-300`}
+    data-color={contextColor}
+  > <!-- hover color should be default home page hover color-->
+    <slot />
+  </a>
+</li>

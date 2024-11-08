@@ -1,0 +1,294 @@
+---
+const { id } = Astro.params;
+import PageGoBack from "../../components/PageGoBack.astro";
+import { SwitchImage } from "../../components/SwitchImage.tsx";
+import Layout from "../../layouts/Layout.astro";
+import { allPlaylists } from "../../lib/data";
+import Icon from "astro-icon";
+import { Toaster } from "../../components/ui/sonner.tsx"
+
+export function getStaticPaths() {
+  return allPlaylists.map((playlist) => ({
+    params: {
+      id: playlist.id,
+    },
+  }));
+}
+
+const playlist = allPlaylists.find((playlist) => playlist.id === id);
+---
+
+<Layout title={playlist?.title || "404"}>
+  <div
+    class="relative bg-zinc-900 min-h-full flex flex-col overflow-x-hidden rounded-lg"
+    transition:name=`playlist ${playlist?.id} box`
+  >
+    <PageGoBack />
+    <div
+      class="flex flex-col items-center md:flex-row md:items-stretch gap-8 px-6"
+    >
+      <div class="h-5 w-5 flex-none">
+        
+      </div>
+      <div class="flex flex-col justify-between">
+        <div class="flex flex-1 items-end shoggoth-font-mini cool-font-color">Archetype</div>
+        <div class="flex items-center">
+          <div>
+            <h1 class="title-clamp block ascii-font">
+              {playlist?.title}
+              <span transition:name=`playlist ${playlist?.id} title`></span>
+            </h1>
+          </div>
+          <div class="ml-6">
+            <button
+              class="h-12 w-14 bg-white-800 bg-grey-90 hover:shadow-outline hover:scale-120 shadow-md shadow-black/40 rounded-full flex items-center justify-center text-black"
+            >
+              <Icon
+              name="mdi:play"
+              class="h-8 w-8 hover:shadow-outline hover:p-1"
+              id="playButton"
+              data-message={playlist?.title}
+              />
+          </button>
+          </div>
+        </div>
+        <p id="showprompt_on_archetype_page" class="p-1 pt-2 ascii-font">
+          <span class="hidden lg:inline-block xl:inline-block">←</span>
+          Enter a prompt first
+        </p>
+        <SwitchImage client:load/>
+      </div>
+    </div>
+
+    <div class="bg-zinc-900/30 mt-6 flex-1 p-6 blur-100">
+      <div class="flex gap-1 items-center justify-center">
+        <div class="ml-4" transition:name=`playlist ${playlist?.id} play`>
+          <Toaster client:load/>
+          <div id="Poem Placeholder">
+          </div>
+        </div>
+      </div>
+      <div class="px-6 pt-4">
+      </div>
+    </div>
+    <div
+      class="absolute h-screen inset-0 z-[-1] bg-gradient-to-b from-context"
+      style=`--context-color:${playlist?.color.accent}`
+    >
+      
+      <div
+      class="absolute inset-0 bg-gradient-to-t via-transparent from-zinc-900"
+      >
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+  .title-clamp {
+    font-size: clamp(15px, 4vw, 50px);
+    line-height: 1;
+  }
+
+  .cool-font {
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .loading-spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: var(--accent);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style>
+
+
+<script>
+import { currentPrompt, isImageGenOn } from '../../store/atom.js';
+import {toast} from "sonner";
+
+//when playbutton is clicked, call API, get value, and update relevant DOM element with API response
+//update with error message if API response fails
+//make sure script persists across page transitions 
+document.addEventListener('astro:page-load', () => {
+
+  let localIsPromptSet = false;
+  let localCurrentPrompt = "";
+  let localIsImageGenOn = false;
+
+  // listen to whether prompt is set or not and what the current prompt is
+  currentPrompt.subscribe(prompt => {
+      if(prompt!="") {
+        //console.log(`Prompt is set to ${prompt}`);
+        const archetype_page_prompt_shower = document.getElementById("showprompt_on_archetype_page");
+        archetype_page_prompt_shower.innerHTML = `Prompt: "${prompt}"`;
+        localIsPromptSet = true;
+        localCurrentPrompt = prompt;
+      }
+      else {
+        console.log(`Prompt is not set`);
+      }
+    })
+
+  isImageGenOn.subscribe(on => {
+    if(on) {
+      console.log(`Image generation is on`);
+      localIsImageGenOn = true;
+    }
+    else {
+      console.log(`Image generation is off`);
+      localIsImageGenOn = false;
+    }
+  })
+
+  const playButton = document.getElementById('playButton');
+
+  const archetype = playButton?.getAttribute('data-message')||'n/a';
+  console.log(`${archetype} page entered`);
+
+  playButton?.addEventListener('click', () => {console.log('Generate poem button clicked'); handleClick(archetype);});
+
+  // Function to create loading elements
+  const createLoadingElements = () => {
+    const loadingDiv = document.createElement('div');
+    loadingDiv.id = 'LoadingContainer';
+    loadingDiv.classList.add('flex', 'items-center', 'justify-center', 'transition-opacity', 'duration-300');
+    loadingDiv.innerHTML = `
+      <p id="GeneratingMessage" class="py-5 px-5 text-center font-size:vw ascii-font">Generating poem...</p>
+      <div class="loading-spinner py-2"></div>
+    `;
+
+    const loadingSpinner = document.createElement('div');
+    loadingSpinner.classList.add('loading-spinner', 'transition-opacity', 'duration-300');
+
+    return { loadingDiv, loadingSpinner };
+  };
+  
+  const handleClick = async(archetype) => {
+    if(localIsPromptSet){
+      try {
+
+        // Define the element where you want to insert the content/prepend loading message
+        const targetElement = document.getElementById('Poem Placeholder');
+
+        // Create loading elements
+        const { loadingDiv, loadingSpinner } = createLoadingElements();
+
+        //prepend loading container and then remove it after API call 
+        //add loading div before poem placeholder
+        targetElement?.prepend(loadingDiv);
+
+        console.log('Fetching poem...');
+
+        // Fetch the poem
+        const imageParam = localIsImageGenOn ? 'true' : 'false';
+        console.log(`imageParam = ${imageParam}`)
+        const response = await fetch(`/api/index?archetype=${archetype}&prompt=${localCurrentPrompt}&image=${imageParam}`, {
+          method: 'GET'
+        });
+        let data;
+        let data2;
+        if (!response.ok) {
+            console.log(`Error retrieving data: ${response.status}`);
+            data = {text:"Error generating poem. Please refresh the page and try again!"};
+            data2 = { poem: "Error generating poem.", imageUrl: "" };
+          }
+        else{
+          data = await response.json();
+        }
+        console.log(data);
+        console.log(data2);
+        console.log(archetype);
+
+        // Remove the loading div and spinner
+        loadingDiv.remove()
+              
+        // Create a new div element
+        const newDiv = document.createElement('div');
+
+        // Apply Tailwind CSS classes to style the poem
+        newDiv.classList.add(
+            'text-white',
+            'rounded',
+            'p-6',
+            'my-4',
+            'text-center',
+            'ascii-font'
+        );
+        
+        // Set the innerHTML of the new div with the poem content
+        newDiv.innerHTML = `
+          ${data.poem.split('\n\n').map(paragraph => paragraph.split('\n').map(line => `<p class="text-lg">${line}</p>`).join('\n')).join('<br>')}
+        `;
+
+        // Create and append a horizontal line element
+        const hrElement = document.createElement('hr');
+        hrElement.classList.add('my-6', 'border-gray-300');
+        
+        // Append the new div to the target element
+        targetElement?.prepend(hrElement);
+        targetElement?.prepend(newDiv);
+
+        // Display the image
+        if (data.imageUrl) {
+          const imageUrlElement = document.createElement('img');
+          imageUrlElement.classList.add('mx-auto', 'my-auto', 'sm:max-h-[600px]', 'sm:max-w-[600px]', 'rounded-lg', 'shadow-lg');
+          imageUrlElement.src = data.imageUrl;
+          targetElement?.prepend(imageUrlElement);
+        }
+
+      } catch (error) {
+        console.log("Error:", error);
+
+        console.log("Displaying error message...");
+    
+        const targetElement = document.getElementById('Poem Placeholder');
+        // Create a new div element
+        const newDiv = document.createElement('div');
+
+        const toastId = toast.error("Error", {
+          description: "Error loading poem or image. Please try again!",
+          duration: 4000,
+          action: {
+            label: "X",
+            onClick: () => { 
+              console.log("Closing Toast"); 
+              toast.dismiss(toastId);
+            },
+          },
+        });
+        console.log('Error loading poem or image! Sent toast.')
+      }
+    } else {
+      console.log('Generate button clicked but prompt is not set!');
+
+      const toastId = toast.error("No prompt set yet", {
+        description: "Enter a prompt first!",
+        duration: 4000,
+        action: {
+          label: "X",
+          onClick: () => { 
+            console.log("Closing Toast"); 
+            toast.dismiss(toastId);
+          },
+        },
+      });
+      console.log('Prompt is not set! Sent toast.');
+
+    }
+  };
+});
+</script>

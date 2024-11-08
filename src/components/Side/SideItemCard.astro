@@ -1,0 +1,86 @@
+---
+import type { Playlist } from "../../lib/data";
+import PureInlineArtists from "../PureInlineArtists.astro";
+interface Props {
+  playlist: Playlist;
+  title: string;
+}
+
+const { playlist, title } = Astro.props;
+const isTitleMatch = title === playlist.title;
+---
+
+<a
+  href={`/archetype/${playlist.id}`}
+  data-archetype-id={playlist.id}
+  class={`playlist-item sidemenu-item flex group relative p-4 overflow-hidden items-center gap-5 rounded-md shadow-lg hover:shadow-xl outline-none hover:p-6 hover:bold focus:bg-zinc-500/50 ${isTitleMatch ? 'bg-zinc-500/20 bold p-6 shadow-xl focused-text' : ''}`}
+  style={{ '--hover-color': playlist.color.accent }}
+  data-color={playlist.color.accent}
+>
+  <div class="flex flex-auto flex-col truncate">
+    <div class={`w-full ascii-font flex-none truncate ${isTitleMatch ? 'font-bold ascii-font-lg' : ''}`}>
+      {playlist.title}
+    </div>
+    <div class={`text-zinc-400 ascii-font text-xs ${isTitleMatch ? 'font-bold' : ''}`}>
+      <PureInlineArtists artists={playlist.artists} />
+    </div>
+  </div>
+</a>
+
+<style>
+  .playlist-item:hover, 
+  .focused-text {
+    color: var(--hover-color);
+  }
+
+  .playlist-item:focus {
+    color: var(--hover-color);
+  }
+
+  .focused-bg {
+    background-color: var(--hover-bg-color);
+  }
+</style>
+
+<script>
+  import { currentPrompt } from '../../store/atom.js';
+  import {toast} from "sonner"
+
+  document.addEventListener("astro:page-load", ()=>{
+
+    const handleArchetypeClick = () => {
+      const toastId = toast.error("No prompt set yet", {
+        description: "Enter a prompt first!",
+        duration: 2000,
+        action: {
+          label: "X",
+          onClick: () => { 
+            console.log("Closing Toast"); 
+            toast.dismiss(toastId);
+          },
+        },
+      });
+      console.log('Prompt is not set! Sent toast.');
+    };
+
+    // listen to whether prompt is set or not 
+    currentPrompt.subscribe(prompt => {
+      if (prompt!="") {
+        document.querySelectorAll('.playlist-item').forEach(item => {
+          const playlistId = item.getAttribute('data-archetype-id');
+          item.removeEventListener('click', handleArchetypeClick);
+          item.setAttribute('href', `/archetype/${playlistId}`);
+        });
+        console.log(`Archetype Clicked | Prompt Exists: ${prompt}`);
+      } else {
+        document.querySelectorAll('.playlist-item').forEach(item => {
+          item.setAttribute('href', `/`);
+          item.addEventListener('click', handleArchetypeClick);
+        });
+        console.log(`Archetype Clicked | Prompt Does Not Exist: ${prompt}`);
+      }
+    });
+
+  });
+
+</script>
