@@ -5,7 +5,7 @@ An LLM wrapper concept piece that generates poems + related imagery based on use
 
 Poiesis Ex Machina is a creative exploration of the potential and symbolism of generative ai models from a social/philosophical perspective. 
 
-## Live Project 
+## Live Demo Link
 
 [Poiesis Ex Machina](https://poeies-ex-machina.vercel.app/)
 
