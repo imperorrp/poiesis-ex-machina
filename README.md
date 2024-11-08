@@ -9,6 +9,8 @@ Poiesis Ex Machina is a creative exploration of the potential and symbolism of g
 
 [Poiesis Ex Machina](https://poeies-ex-machina.vercel.app/)
 
+![image of site](image.png)
+
 ## About 
 
 1. LLMs can be interpreted as techno-manifestations of (the Jungian concept of) the collective unconscious of humanity.
@@ -40,4 +42,9 @@ if not pattern learning- and replication machines?
 Poiesis Ex Machina is built with the Astro framework and a few serverless javascript functions (`/api/index.js`) and deployed on Vercel. React and Svelte components are used in Astro "islands",
 and the [Spotify Clone with Astro View Transitions](https://github.com/igorm84/spotify-astro-transitions) site was used as a template. Shadcn/ui components are used as well. 
 
+## Deployment 
 
+- Clone this repo 
+- Download dependencies with `npm install` 
+- Add Mongodb Atlas URI and Together.ai API key to a .env file (or add to the environment variables section on Vercel)
+- Deploy in development mode with `npm run dev` and in prod mode with `npm run build` 
