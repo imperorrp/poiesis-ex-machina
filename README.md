@@ -7,7 +7,7 @@ Poiesis Ex Machina is a creative exploration of the potential and symbolism of g
 
 ## Live Demo Link
 
-[Poiesis Ex Machina](https://poeies-ex-machina.vercel.app/)
+[Poiesis Ex Machina](https://poeiesis-ex-machina.vercel.app/)
 
 ![image of site](image.png)
 
