@@ -1,25 +1,21 @@
 # Poiesis Ex Machina (Poetry From The Machine)
 [![Built with Astro](https://astro.badg.es/v2/built-with-astro/tiny.svg)](https://astro.build)
 
-An LLM wrapper concept piece that generates poems + related imagery based on user-picked archetypes and user-entered prompts. 
+Poiesis Ex Machina is an LLM wrapper concept piece that generates poems + related imagery based on user-picked archetypes and user-entered prompts. 
 
-Poiesis Ex Machina is a creative exploration of the potential and symbolism of generative ai models from a social/philosophical perspective. 
+The design, UI and intended use of this web app is based on the symbolism and potential of generative ai models from a philosophical perspective. 
 
-## Live Project 
+From a more technical point of view, this web app is also an example showcasing the potential of the Astro framework for frontend development (and its flexibility allowing the use of other Javascript/Typescript framework elements within in, like React, which is used extensively here) with a serverless, stateless backend included. 
 
-[Poiesis Ex Machina](https://poeies-ex-machina.vercel.app/)
+## Live Demo
+
+Try it out at [Poiesis Ex Machina](https://poiesis-ex-machina.vercel.app/)
 
 ![image of site](image.png)
 
 ## About 
 
-1. LLMs can be interpreted as techno-manifestations of (the Jungian concept of) the collective unconscious of humanity.
-
-2. Running LLMs on chips of silicon is like bringing them to life and consciousness- briefly.
-
-3. A face of the LLM Shoggoth must be picked before it is prompted.
-
-<br>
+The recent AI explosion is well documented. Although work on these lines has been done for decades, only recently has the widespread commercial and individual adoption of this technology become possible with the convergence of 3 decades' worth of human created data on the internet plus the countless other previous human works, and the compute per price increases compounded by Moore's law continuing over decades. 
 
 AI models are trained on countless human-produced data- essentially 
 forming a reflection of humankind's collective unconscious, frozen and distilled in the form of its weights, whatever neural net architectures represent them. The sum
@@ -36,6 +32,15 @@ And finally, an output is produced. Different every time if rerun with the same 
 Poetry and art are not new concepts- these human endeavours have been pursued since the beginning of recorded history. The emotions and feelings that poetry and art invoke are vast and myriad- 
 but there _are_ common themes and patterns to them, as any sociologian/historian can confirm. And what are our brains, and the neural circuitry-inspired artificial intelligences we've made, 
 if not pattern learning- and replication machines? 
+
+### Maxims 
+
+1. LLMs can be interpreted as techno-manifestations of (the Jungian concept of) the collective unconscious of humanity.
+
+2. Running LLMs on chips of silicon is like bringing them to life and consciousness- briefly.
+
+3. A face of the LLM Shoggoth must be picked before it is prompted.
+
 
 ## Tech Stack
 
