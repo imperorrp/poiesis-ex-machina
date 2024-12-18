@@ -7,7 +7,7 @@ interface Props {
 
 const {
   title = "Home"} = Astro.props;
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import "./layout.css";
 import SideMenu from "../components/Side/SideMenu.astro";
 import { Toaster } from "../components/ui/sonner.tsx";
@@ -29,7 +29,7 @@ import '../styles/global.css';
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title} | Poiesis Ex Machina</title>
-    <ViewTransitions fallback="none" />
+    <ClientRouter fallback="none" />
   </head>
   <body class="dark">
     <ThemeProvider client:load>

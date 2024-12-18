@@ -48,6 +48,41 @@ const isTitleMatch = title === playlist.title;
 
   document.addEventListener("astro:page-load", ()=>{
 
+    //NOTE: consider refactoring this. Also check [id].astro for subscription issue with view transitions.
+
+    // Function to get the current value of a store
+    const getCurrentValue = (store) => {
+      let value;
+      const unsubscribe = store.subscribe((v) => {
+        value = v;
+      });
+      unsubscribe();
+      return value;
+    };
+
+    const playlistItems = document.querySelectorAll('.playlist-item');
+
+    playlistItems.forEach(item => {
+      item.addEventListener('click', (event) => {
+        const prompt = getCurrentValue(currentPrompt);
+        if (prompt==="") {
+          event.preventDefault();
+          const toastId = toast.error("No prompt set yet", {
+            description: "Enter a prompt first!",
+            duration: 2000,
+            action: {
+              label: "X",
+              onClick: () => { 
+                console.log("Closing Toast"); 
+                toast.dismiss(toastId);
+              },
+            },
+          });
+        }
+      });
+    });
+
+    /*
     const handleArchetypeClick = () => {
       const toastId = toast.error("No prompt set yet", {
         description: "Enter a prompt first!",
@@ -80,6 +115,7 @@ const isTitleMatch = title === playlist.title;
         console.log(`Archetype Clicked | Prompt Does Not Exist: ${prompt}`);
       }
     });
+    */
 
   });
 
