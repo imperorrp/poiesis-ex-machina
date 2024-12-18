@@ -19,9 +19,10 @@ export function SwitchImage() {
     }, []); // Empty dependency array means this effect runs only once
 
     const handleToggle = () => {
-        console.log('switching image toggle');
+        //console.log(`switching image toggle. current local state: ${localSwitchState} | current global state: ${switchState}`);
         setLocalSwitchState(!localSwitchState);
         isImageGenOn.set(!switchState);
+        console.log(`switched image toggle. new local state: ${!localSwitchState} | new global state: ${!switchState}`);
     };
 
     return (

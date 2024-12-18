@@ -115,7 +115,6 @@ const playlist = allPlaylists.find((playlist) => playlist.id === id);
 }
 </style>
 
-
 <script>
 import { currentPrompt, isImageGenOn } from '../../store/atom.js';
 import {toast} from "sonner";
@@ -123,34 +122,32 @@ import {toast} from "sonner";
 //when playbutton is clicked, call API, get value, and update relevant DOM element with API response
 //update with error message if API response fails
 //make sure script persists across page transitions 
+
+// NOTE: subscriptions don't work after view transitions are used to navigate between pages (either main page to this one, or even this one to the main page if this page is reloaded). 
+// The scripts in the astro:page-load event listener are only executed once, upon initial load. This also applies to SideItemCard.astro and the prompt checker subscription
+
+// Function to get the current value of a store
+const getCurrentValue = (store) => {
+    let value;
+    const unsubscribe = store.subscribe((v) => {
+      value = v;
+    });
+    unsubscribe();
+    return value;
+  };
+
 document.addEventListener('astro:page-load', () => {
-
-  let localIsPromptSet = false;
-  let localCurrentPrompt = "";
-  let localIsImageGenOn = false;
-
+  console.log('Page load event listener');
+  
   // listen to whether prompt is set or not and what the current prompt is
   currentPrompt.subscribe(prompt => {
-      if(prompt!="") {
-        //console.log(`Prompt is set to ${prompt}`);
-        const archetype_page_prompt_shower = document.getElementById("showprompt_on_archetype_page");
-        archetype_page_prompt_shower.innerHTML = `Prompt: "${prompt}"`;
-        localIsPromptSet = true;
-        localCurrentPrompt = prompt;
-      }
-      else {
-        console.log(`Prompt is not set`);
-      }
-    })
-
-  isImageGenOn.subscribe(on => {
-    if(on) {
-      console.log(`Image generation is on`);
-      localIsImageGenOn = true;
+    if(prompt!="") {
+      //console.log(`Prompt is set to ${prompt}`);
+      const archetype_page_prompt_shower = document.getElementById("showprompt_on_archetype_page");
+      archetype_page_prompt_shower.innerHTML = `Prompt: "${prompt}"`;
     }
     else {
-      console.log(`Image generation is off`);
-      localIsImageGenOn = false;
+      console.log(`Prompt is not set`);
     }
   })
 
@@ -178,7 +175,8 @@ document.addEventListener('astro:page-load', () => {
   };
   
   const handleClick = async(archetype) => {
-    if(localIsPromptSet){
+    const prompt = getCurrentValue(currentPrompt);
+    if(prompt != ""){
       try {
 
         // Define the element where you want to insert the content/prepend loading message
@@ -194,9 +192,10 @@ document.addEventListener('astro:page-load', () => {
         console.log('Fetching poem...');
 
         // Fetch the poem
-        const imageParam = localIsImageGenOn ? 'true' : 'false';
+        const imageParam = getCurrentValue(isImageGenOn) ? 'true' : 'false';
         console.log(`imageParam = ${imageParam}`)
-        const response = await fetch(`/api/index?archetype=${archetype}&prompt=${localCurrentPrompt}&image=${imageParam}`, {
+        const prompt = getCurrentValue(currentPrompt);
+        const response = await fetch(`/api/index?archetype=${archetype}&prompt=${prompt}&image=${imageParam}`, {
           method: 'GET'
         });
         let data;
