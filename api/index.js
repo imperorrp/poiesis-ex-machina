@@ -86,13 +86,13 @@ async function getImageUrl(textToImagePrompt) {
     };
 
     const response = await together.images.create({
-        model: "stabilityai/stable-diffusion-xl-base-1.0",
+        model: "black-forest-labs/FLUX.1-schnell-Free", // previously: stabilityai/stable-diffusion-xl-base-1.0
         prompt: input.prompt,
-        width: 512,
-        height: 512,
-        steps: 25,
+        width: 1024,
+        height: 1024,
+        steps: 4,
         n: 1,
-        seed: 8528,
+        //seed: 8528,
         response_format: "b64_json"});
     //console.log(response.data[0].b64_json);
     const b64_json = response.data[0].b64_json;
