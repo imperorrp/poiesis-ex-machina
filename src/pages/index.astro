@@ -8,6 +8,8 @@ import { Toaster } from "../components/ui/sonner.tsx"
 import { IndexAccordion } from "../components/IndexAccordion.tsx";
 import Layout from "../layouts/Layout.astro";
 import { sidebarEristicsArchetypes} from "../lib/data";
+import MobileArchetypeSwitcher from "../components/Side/MobileArchetypeSwitcher";
+import { archetypeData } from "../lib/combinedArchetypeData";
 
 const title="Home";
 const contextColor = "#134e4a";
@@ -35,12 +37,12 @@ const contextColor = "#134e4a";
         <a
           class="lg:hidden xl:hidden flex gap-4 text-zinc-400 hover:text-zinc-100 py-3.5 px-5 font-semibold transition-all duration-300"
         >
-          Archetypes
+          
         </a>
         <div
           class="grid gap-y-4 gap-x-6 sm:grid-cols-2 lg:hidden xl:hidden mt-6"
         >
-          {sidebarEristicsArchetypes.map((playlist) => <SideItemCard {playlist} {title}/>)}
+          <MobileArchetypeSwitcher client:load archetypeData={archetypeData}/>
         </div>
       </div>
     </div>

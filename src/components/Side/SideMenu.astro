@@ -1,45 +1,13 @@
 ---
 import ArchetypeSwitcher from './ArchetypeSwitcher';
 import SideMenuItem from "./SideMenuItem.astro";
-import { sidebarEristicsArchetypes } from "../../lib/data";
-import { sidebarJungianArchetypes } from "../../lib/jungianData";
-import { sidebarDnDArchetypes } from "../../lib/dndData";
-import { currentArchetypeType } from '../../store/atom.js';
-import SideItemCard from "./SideItemCard.astro";
 interface Props {
   title: string;
 }
-
 const { title } = Astro.props;
 
 
-type ArchetypeType = "Eristics" | "Jungian" | "Dungeons & Dragons";
-type Playlist = typeof sidebarEristicsArchetypes[0];
-type ArchetypeMap = Partial<Record<ArchetypeType, Playlist[]>>;
-
-const archetypeTypes: ArchetypeType[] = ["Eristics", "Jungian", "Dungeons & Dragons"];
-
-const tooltips: Record<ArchetypeType, string> = {
-  "Eristics": "Eristics Test archetypes",
-  "Jungian": "Carl Jung's psychological archetypes",
-  "Dungeons & Dragons": "D&D class-based archetypes"
-};
-
-const currentArchetype = archetypeTypes[0] as ArchetypeType;
-
-const archetypeMap: ArchetypeMap = {
-  "Eristics": sidebarEristicsArchetypes,
-  //"Jungian": sidebarJungianArchetypes,
-  //"Dungeons & Dragons": sidebarDnDArchetypes
-};
-
-const currentPlaylists = archetypeMap[currentArchetype] || [];
-
-const archetypeData = {
-  eristicsPlaylists: sidebarEristicsArchetypes,
-  jungianPlaylists: sidebarJungianArchetypes,
-  dndPlaylists: sidebarDnDArchetypes
-};
+import { archetypeData } from "../../lib/combinedArchetypeData";
 ---
 
 <div class="flex flex-col flex-1 gap-2">
@@ -63,14 +31,6 @@ const archetypeData = {
     <ArchetypeSwitcher client:load archetypeData={archetypeData} />
   </div>
 </div>
-
-<script >
-  import { currentArchetypeType } from '../../store/atom.js';
-
-
-  //console.log(`SideMenu component has been loaded`);
-</script>
-
 
 <style>
   .tooltip-arrow {
