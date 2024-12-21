@@ -72,7 +72,7 @@ export const morePlaylists = [
   })),
 ];
 
-export const sidebarPlaylists = [
+export const sidebarEristicsArchetypes = [
   ...playlists.map((item) => ({
     ...item,
     //id: item.id + "_archetype",
@@ -83,5 +83,5 @@ export const sidebarPlaylists = [
 export const allPlaylists = [
   ...playlists,
   ...morePlaylists,
-  ...sidebarPlaylists,
+  ...sidebarEristicsArchetypes,
 ];

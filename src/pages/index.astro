@@ -7,7 +7,7 @@ import SideItemCard from "../components/Side/SideItemCard.astro";
 import { Toaster } from "../components/ui/sonner.tsx"
 import { IndexAccordion } from "../components/IndexAccordion.tsx";
 import Layout from "../layouts/Layout.astro";
-import { sidebarPlaylists} from "../lib/data";
+import { sidebarEristicsArchetypes} from "../lib/data";
 
 const title="Home";
 const contextColor = "#134e4a";
@@ -16,7 +16,7 @@ const contextColor = "#134e4a";
 <Layout title="Home">
   <div
     id="playlist-container"
-    class="relative transition-all duration-200 bg-context flex flex-col min-h-[95vh] flex-grow"
+    class="relative transition-all duration-200 bg-context flex flex-col min-h-[95vh] flex-grow main-section"
     style="--context-color:#134e4a;"
     data-color={contextColor}
   >
@@ -40,7 +40,7 @@ const contextColor = "#134e4a";
         <div
           class="grid gap-y-4 gap-x-6 sm:grid-cols-2 lg:hidden xl:hidden mt-6"
         >
-          {sidebarPlaylists.map((playlist) => <SideItemCard {playlist} {title}/>)}
+          {sidebarEristicsArchetypes.map((playlist) => <SideItemCard {playlist} {title}/>)}
         </div>
       </div>
     </div>

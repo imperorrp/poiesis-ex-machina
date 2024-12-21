@@ -7,6 +7,31 @@
   font-family: 'Roboto', sans-serif;
 }*/
 
+/* ARCHETYPE SWITCHER COMPONENT STYLES */
+
+.playlist-item:hover, 
+.focused-text {
+  color: var(--hover-color);
+}
+
+.playlist-item:focus {
+  color: var(--hover-color);
+}
+
+.playlist-item {
+  transition: all 0.3s ease-in-out;
+}
+
+.main-section {
+  transition: background-color 0.3s ease;
+}
+
+.focused-bg {
+  background-color: var(--hover-bg-color);
+}
+
+/* END ARCHETYPE SWITCHER COMPONENT STYLES */
+
 .cool-font-color {
   color: #00bcd4;
 }

@@ -4,18 +4,38 @@ import PageGoBack from "../../components/PageGoBack.astro";
 import { SwitchImage } from "../../components/SwitchImage.tsx";
 import Layout from "../../layouts/Layout.astro";
 import { allPlaylists } from "../../lib/data";
+import { allDnDPlaylists } from "../../lib/dndData";
+import { allJungPlaylists } from "../../lib/jungianData";
 import Icon from "astro-icon";
 import { Toaster } from "../../components/ui/sonner.tsx"
 
 export function getStaticPaths() {
-  return allPlaylists.map((playlist) => ({
+  const combinedPlaylists = [
+    ...allPlaylists.map(p => ({ ...p, type: 'eristic' })),
+    ...allDnDPlaylists.map(p => ({ ...p, type: 'dnd' })),
+    ...allJungPlaylists.map(p => ({ ...p, type: 'jungian' }))
+  ];
+  
+  return combinedPlaylists.map((playlist) => ({
     params: {
       id: playlist.id,
     },
+    props: { type: playlist.type }
   }));
 }
 
-const playlist = allPlaylists.find((playlist) => playlist.id === id);
+// Find playlist from the appropriate dataset
+const playlist = allPlaylists.find((p) => p.id === id) || 
+                allDnDPlaylists.find((p) => p.id === id) || 
+                allJungPlaylists.find((p) => p.id === id);
+
+// Determine archetype type
+const getArchetypeType = () => {
+  if (allPlaylists.find(p => p.id === id)) return "Archetype (Eristic)";
+  if (allDnDPlaylists.find(p => p.id === id)) return "Archetype (Dungeons and Dragons)";
+  if (allJungPlaylists.find(p => p.id === id)) return "Archetype (Jungian)";
+  return "Archetype";
+};
 ---
 
 <Layout title={playlist?.title || "404"}>
@@ -28,10 +48,9 @@ const playlist = allPlaylists.find((playlist) => playlist.id === id);
       class="flex flex-col items-center md:flex-row md:items-stretch gap-8 px-6"
     >
       <div class="h-5 w-5 flex-none">
-        
       </div>
       <div class="flex flex-col justify-between">
-        <div class="flex flex-1 items-end shoggoth-font-mini cool-font-color">Archetype</div>
+        <div class="flex flex-1 items-end shoggoth-font-mini cool-font-color">{getArchetypeType()}</div>
         <div class="flex items-center">
           <div>
             <h1 class="title-clamp block ascii-font">
@@ -44,12 +63,13 @@ const playlist = allPlaylists.find((playlist) => playlist.id === id);
               class="h-12 w-14 bg-white-800 bg-grey-90 hover:shadow-outline hover:scale-120 shadow-md shadow-black/40 rounded-full flex items-center justify-center text-black"
             >
               <Icon
-              name="mdi:play"
-              class="h-8 w-8 hover:shadow-outline hover:p-1"
-              id="playButton"
-              data-message={playlist?.title}
+                name="mdi:play"
+                class="h-8 w-8 hover:shadow-outline hover:p-1"
+                id="playButton"
+                data-message={playlist?.title}
+                data-type={getArchetypeType()}
               />
-          </button>
+            </button>
           </div>
         </div>
         <p id="showprompt_on_archetype_page" class="p-1 pt-2 ascii-font">
@@ -75,9 +95,8 @@ const playlist = allPlaylists.find((playlist) => playlist.id === id);
       class="absolute h-screen inset-0 z-[-1] bg-gradient-to-b from-context"
       style=`--context-color:${playlist?.color.accent}`
     >
-      
       <div
-      class="absolute inset-0 bg-gradient-to-t via-transparent from-zinc-900"
+        class="absolute inset-0 bg-gradient-to-t via-transparent from-zinc-900"
       >
       </div>
     </div>
@@ -85,7 +104,6 @@ const playlist = allPlaylists.find((playlist) => playlist.id === id);
 </Layout>
 
 <style>
-
   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
   .title-clamp {
     font-size: clamp(15px, 4vw, 50px);
@@ -97,22 +115,18 @@ const playlist = allPlaylists.find((playlist) => playlist.id === id);
   }
 
   .loading-spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-left-color: var(--accent);
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  animation: spin 1s linear infinite;
-}
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: var(--accent);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+  }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
-  100% {
-    transform: rotate(360deg);
-  }
-}
 </style>
 
 <script>
@@ -134,15 +148,14 @@ const getCurrentValue = (store) => {
     });
     unsubscribe();
     return value;
-  };
+};
 
 document.addEventListener('astro:page-load', () => {
   console.log('Page load event listener');
   
   // listen to whether prompt is set or not and what the current prompt is
   currentPrompt.subscribe(prompt => {
-    if(prompt!="") {
-      //console.log(`Prompt is set to ${prompt}`);
+    if(prompt !== "") {
       const archetype_page_prompt_shower = document.getElementById("showprompt_on_archetype_page");
       archetype_page_prompt_shower.innerHTML = `Prompt: "${prompt}"`;
     }
@@ -152,13 +165,15 @@ document.addEventListener('astro:page-load', () => {
   })
 
   const playButton = document.getElementById('playButton');
+  const archetype = playButton?.getAttribute('data-message') || 'n/a';
+  const archetypeType = playButton?.getAttribute('data-type') || 'Archetype';
+  console.log(`${archetypeType} - ${archetype} page entered`);
 
-  const archetype = playButton?.getAttribute('data-message')||'n/a';
-  console.log(`${archetype} page entered`);
+  playButton?.addEventListener('click', () => {
+    console.log('Generate poem button clicked'); 
+    handleClick(archetype, archetypeType);
+  });
 
-  playButton?.addEventListener('click', () => {console.log('Generate poem button clicked'); handleClick(archetype);});
-
-  // Function to create loading elements
   const createLoadingElements = () => {
     const loadingDiv = document.createElement('div');
     loadingDiv.id = 'LoadingContainer';
@@ -174,90 +189,73 @@ document.addEventListener('astro:page-load', () => {
     return { loadingDiv, loadingSpinner };
   };
   
-  const handleClick = async(archetype) => {
+  const handleClick = async(archetype, archetypeType) => {
     const prompt = getCurrentValue(currentPrompt);
-    if(prompt != ""){
+    if(prompt !== "") {
       try {
-
-        // Define the element where you want to insert the content/prepend loading message
         const targetElement = document.getElementById('Poem Placeholder');
-
-        // Create loading elements
         const { loadingDiv, loadingSpinner } = createLoadingElements();
-
-        //prepend loading container and then remove it after API call 
-        //add loading div before poem placeholder
         targetElement?.prepend(loadingDiv);
 
         console.log('Fetching poem...');
 
-        // Fetch the poem
         const imageParam = getCurrentValue(isImageGenOn) ? 'true' : 'false';
         console.log(`imageParam = ${imageParam}`)
-        const prompt = getCurrentValue(currentPrompt);
-        const response = await fetch(`/api/index?archetype=${archetype}&prompt=${prompt}&image=${imageParam}`, {
+        const response = await fetch(`/api/index?archetype=${archetype}&archetypeType=${archetypeType}&prompt=${prompt}&image=${imageParam}`, {
           method: 'GET'
         });
+        
         let data;
-        let data2;
         if (!response.ok) {
-            console.log(`Error retrieving data: ${response.status}`);
-            data = {text:"Error generating poem. Please refresh the page and try again!"};
-            data2 = { poem: "Error generating poem.", imageUrl: "" };
-          }
-        else{
+          console.log(`Error retrieving data: ${response.status}`);
+          data = {text:"Error generating poem. Please refresh the page and try again!"};
+        } else {
           data = await response.json();
         }
         console.log(data);
-        console.log(data2);
-        console.log(archetype);
 
-        // Remove the loading div and spinner
-        loadingDiv.remove()
+        loadingDiv.remove();
               
-        // Create a new div element
         const newDiv = document.createElement('div');
-
-        // Apply Tailwind CSS classes to style the poem
         newDiv.classList.add(
-            'text-white',
-            'rounded',
-            'p-6',
-            'my-4',
-            'text-center',
-            'ascii-font'
+          'text-white',
+          'rounded',
+          'p-6',
+          'my-4',
+          'text-center',
+          'ascii-font'
         );
         
-        // Set the innerHTML of the new div with the poem content
         newDiv.innerHTML = `
-          ${data.poem.split('\n\n').map(paragraph => paragraph.split('\n').map(line => `<p class="text-lg">${line}</p>`).join('\n')).join('<br>')}
+          ${data.poem.split('\n\n').map(paragraph => 
+            paragraph.split('\n').map(line => 
+              `<p class="text-lg">${line}</p>`
+            ).join('\n')
+          ).join('<br>')}
         `;
 
-        // Create and append a horizontal line element
         const hrElement = document.createElement('hr');
         hrElement.classList.add('my-6', 'border-gray-300');
         
-        // Append the new div to the target element
         targetElement?.prepend(hrElement);
         targetElement?.prepend(newDiv);
 
-        // Display the image
         if (data.imageUrl) {
           const imageUrlElement = document.createElement('img');
-          imageUrlElement.classList.add('mx-auto', 'my-auto', 'sm:max-h-[600px]', 'sm:max-w-[600px]', 'rounded-lg', 'shadow-lg');
+          imageUrlElement.classList.add(
+            'mx-auto', 
+            'my-auto', 
+            'sm:max-h-[600px]', 
+            'sm:max-w-[600px]', 
+            'rounded-lg', 
+            'shadow-lg'
+          );
           imageUrlElement.src = data.imageUrl;
           targetElement?.prepend(imageUrlElement);
         }
 
       } catch (error) {
         console.log("Error:", error);
-
-        console.log("Displaying error message...");
-    
-        const targetElement = document.getElementById('Poem Placeholder');
-        // Create a new div element
-        const newDiv = document.createElement('div');
-
         const toastId = toast.error("Error", {
           description: "Error loading poem or image. Please try again!",
           duration: 4000,
@@ -273,7 +271,6 @@ document.addEventListener('astro:page-load', () => {
       }
     } else {
       console.log('Generate button clicked but prompt is not set!');
-
       const toastId = toast.error("No prompt set yet", {
         description: "Enter a prompt first!",
         duration: 4000,
@@ -286,7 +283,6 @@ document.addEventListener('astro:page-load', () => {
         },
       });
       console.log('Prompt is not set! Sent toast.');
-
     }
   };
 });
