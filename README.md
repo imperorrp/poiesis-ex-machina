@@ -7,6 +7,12 @@ The design, UI and intended use of this web app is based on the symbolism and po
 
 From a more technical point of view, this web app is also an example showcasing the potential of the Astro framework for frontend development (and its flexibility allowing the use of other Javascript/Typescript framework elements within in, like React, which is used extensively here) with a serverless, stateless backend included. 
 
+## Aesthetic 
+
+According to Claude: Cyberpunk and Tech-Noir. 
+
+<img width="600" alt="claude_on_poiesis_ex_machina_aesthetic" src="https://github.com/user-attachments/assets/7aabbafc-92f1-4e8a-afd4-b7938691bf74" />
+
 ## Live Demo
 
 Try it out at [Poiesis Ex Machina](https://poiesis-ex-machina.vercel.app/)
